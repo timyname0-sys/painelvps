@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  painel:
+    build: .
+    container_name: painel-udiaas
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./data:/app/data
+      - ./data/sites:/app/data/sites
+      - ./data/files:/app/data/files
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+    networks:
+      - painel-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: painel-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - painel
+    networks:
+      - painel-network
+
+networks:
+  painel-network:
+    driver: bridge
