@@ -112,10 +112,7 @@ install_dependencies() {
             curl wget git unzip \
             gcc gcc-c++ make \
             ca-certificates \
-            jq nano
-
-        # htop pode não estar disponível em todos os repos
-        $PKG_MANAGER install -y -q htop 2>/dev/null || warn "htop não instalado (opcional)"
+            jq htop nano
     fi
 }
 
